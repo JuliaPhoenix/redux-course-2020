@@ -1,33 +1,32 @@
 import './styles.css'
+import { createStore } from "./createStore";
+import {rootReduser} from "./redux/rootReducer";
 
-let state = 0;
+const store = createStore(rootReduser, 0);
 
-const themeBtn = document.getElementById('theme');
 const counter = document.getElementById('counter');
+const themeBtn = document.getElementById('theme');
 const addBtn = document.getElementById('add');
 const subBtn = document.getElementById('sub');
 const asyncBtn = document.getElementById('async');
 
-function render() {
-    counter.textContent = state.toString();
-}
-
 addBtn.addEventListener('click', () => {
-    state++;
-    render();
+    store.dispatch({type: 'INCREMENT'});
 });
 subBtn.addEventListener('click', () => {
-    state--;
-    render();
+    store.dispatch({type: 'DECREMENT'});
 });
 asyncBtn.addEventListener('click', () => {
-    setTimeout(() => {
-        state++;
-        render();
-    }, 2000)
+
 });
 themeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark');
+    // document.body.classList.toggle('dark');
 });
 
-render();
+store.subscribe(() => {
+    const state = store.getState();
+    counter.textContent = state.toString();
+});
+
+store.dispatch({type: 'INIT'});
+
